@@ -1,1 +1,1 @@
-import { createFakeEvent } from '@ngneat/spectator';
+import { SpectatorService  } from '@ngneat/spectator';
