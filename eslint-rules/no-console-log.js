@@ -1,4 +1,5 @@
-module.exports = {
+// no-console-log.js
+export default {
   // enthält metadata für eine Regel
   meta: {
     type: 'problem', // alternativ "suggestion" oder "layout"
@@ -21,9 +22,12 @@ module.exports = {
     }
   },
 
+  // Regel-Logik
   create(context) {
     return {
+      // Überprüft alle Funktionsaufrufe
       CallExpression(node) {
+        // Überprüft, ob es sich um `console.log` handelt
         if (
           node.callee &&
           node.callee.object &&
@@ -31,6 +35,7 @@ module.exports = {
           node.callee.property &&
           node.callee.property.name === 'log'
         ) {
+          // Meldung ausgeben, wenn `console.log` gefunden wird
           context.report({
             node,
             messageId: 'noConsoleLog',

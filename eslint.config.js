@@ -1,9 +1,9 @@
-const eslint = require('@eslint/js');
-const tseslint = require('typescript-eslint');
-const angular = require('angular-eslint');
-const customEslintPlugin = require('./eslint-rules/custom-eslint-plugin');
+import eslint from '@eslint/js';
+import * as tseslint from 'typescript-eslint';
+import * as angular from 'angular-eslint';
+import customEslintPlugin from './eslint-rules/custom-eslint-plugin.js';
 
-module.exports = tseslint.config(
+export default tseslint.config(
   {
     files: ['**/*.ts'],
     plugins: { custom: customEslintPlugin },
@@ -31,7 +31,10 @@ module.exports = tseslint.config(
           style: 'kebab-case',
         },
       ],
+      /*** Alternative in-built Lösung: ***/
+      // "no-console": ["error", { "allow": ["warn", "error", "info"] }],
       "custom/no-console-log": "error",
+      "custom/use-jest-imports": "warn"
     },
   },
   {
