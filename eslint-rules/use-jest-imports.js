@@ -14,7 +14,7 @@ export default {
   create(context) {
     return {
       ImportDeclaration(node) {
-        node.specifiers.forEach((specifier) => {
+        node.specifiers.forEach(() => {
           if (
             node.source.raw?.toString().match(/('@ngneat\/spectator['\s/])/gi) &&
             !node.source.raw?.toString().match(/('@ngneat\/spectator\/jest['\s/])/gi)
