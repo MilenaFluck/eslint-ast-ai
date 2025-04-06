@@ -34,7 +34,8 @@ export default tseslint.config(
       /*** Alternative in-built Lösung: ***/
       // "no-console": ["error", { "allow": ["warn", "error", "info"] }],
       "custom/no-console-log": "error",
-      "custom/use-jest-imports": "warn"
+      "custom/use-jest-imports": "warn",
+      "custom/correct-order-of-lifecycle-hooks": "error"
     },
   },
   {
