@@ -22,7 +22,7 @@ export default {
             context.report({
               node,
               messageId: 'incorrectImport',
-              // Auto fix Logik: ändert Import-Pfad zu '@ngneat/jest'
+              // Autofix Logik: ändert Import-Pfad zu '@ngneat/jest'
               fix(fixer) {
                 return fixer.replaceText(node.source, "'@ngneat/spectator/jest'");
               }
