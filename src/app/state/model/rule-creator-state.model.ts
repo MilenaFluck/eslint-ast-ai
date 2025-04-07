@@ -5,11 +5,13 @@ import { RuleForm } from './rule-form.model';
 export interface RuleCreatorStateModel {
   creatorForm: FormState<RuleCreatorForm>;
   ruleForm: FormState<RuleForm>;
+  testResult: unknown;
 }
 
 export function createDefault(): RuleCreatorStateModel {
   return {
     creatorForm: FormStateUtil.create(),
-    ruleForm: FormStateUtil.create()
+    ruleForm: FormStateUtil.create(),
+    testResult: null,
   }
 }
