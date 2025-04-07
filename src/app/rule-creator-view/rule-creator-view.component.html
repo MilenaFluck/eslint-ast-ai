@@ -27,7 +27,7 @@
       <mat-form-field>
         <mat-label>Framework</mat-label>
         <mat-select formControlName="framework">
-          <mat-option *ngFor="let framework of [frameworks.ANGULAR, frameworks.REACT, frameworks.NONE]" [value]="framework">
+          <mat-option *ngFor="let framework of [frameworks.ANGULAR, frameworks.REACT, frameworks.VUE, frameworks.NONE]" [value]="framework">
             {{ framework }}
           </mat-option>
         </mat-select>

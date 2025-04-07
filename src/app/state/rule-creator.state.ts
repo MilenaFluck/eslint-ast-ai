@@ -12,6 +12,14 @@ export const RULE_CREATOR_STATE_TOKEN = new StateToken<RuleCreatorStateModel>('r
 @Injectable()
 export class RuleCreatorState {
 
+  @Action(RuleCreatorActions.Create)
+  create(ctx: StateContext<RuleCreatorStateModel>): void {
+    const createData = ctx.getState().creatorForm.model;
+    if (createData) {
+      const prompt = RuleCreatorStateUtil.createPrompt(createData);
+    }
+  }
+
   @Action(RuleCreatorActions.Export)
   export(ctx: StateContext<RuleCreatorStateModel>): void {
     const state = ctx.getState();

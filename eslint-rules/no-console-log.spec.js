@@ -1,5 +1,5 @@
 import { RuleTester } from 'eslint';
-import rule from './no-console-log.js'; // adjust path based on your structure
+import rule from './no-console-log.js';
 
 const ruleTester = new RuleTester();
 
