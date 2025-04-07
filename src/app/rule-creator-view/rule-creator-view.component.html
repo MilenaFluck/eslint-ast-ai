@@ -58,6 +58,10 @@
       </div>
     </form>
     <button mat-flat-button class="float-right" (click)="create()">Create Rule</button>
+    <div class="ressources-container row">
+      <span>Here you find more information on core rules how to set up linting in your project:</span><br>
+      <a [href]="ressources()" target="_blank">{{ ressources() }}</a>
+    </div>
   </div>
   <div right-container class="right-container">
    <form [formGroup]="ruleForm" ngxsForm="rule_creator.ruleForm">
@@ -72,6 +76,9 @@
      <div class="row margin-top">
        <h3>Test for Rule</h3>
        <div class="float-right row">
+         <span *ngIf="testResultStatus()" [ngClass]="{ 'passed': testPassed(), 'failed': !testPassed() }">
+           {{ testResultStatus() + ' at ' + (testResultDateTime() | date: 'shortTime' ) }}
+         </span>
          <button mat-flat-button (click)="testRule()">Test Rule</button>
          <button mat-icon-button (click)="copyTest()">
            <mat-icon fontIcon="content_copy"></mat-icon>

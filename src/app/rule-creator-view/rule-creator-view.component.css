@@ -41,3 +41,17 @@ mat-toolbar {
 .mat-mdc-icon-button {
   background-color: #61A6F9;
 }
+
+.ressources-container {
+  padding: 20px;
+  border: 2px solid #46E687;
+  background-color: #DAFAE7;
+}
+
+.passed {
+  color: #46E687;
+}
+
+.failed {
+  color: crimson;
+}

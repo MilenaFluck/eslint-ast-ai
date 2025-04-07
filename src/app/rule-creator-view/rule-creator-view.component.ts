@@ -9,11 +9,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
-import { Store } from '@ngxs/store';
+import { select, Store } from '@ngxs/store';
 import { basicSetup } from 'codemirror';
 import { CodemirrorEditorComponent } from '../codemirror-editor/codemirror-editor.component';
 import { Category, Framework, RuleType } from '../model';
 import { SplitViewComponent } from '../split-view';
+import { RuleCreatorState } from '../state';
 import { RuleCreatorActions } from '../state/rule-creator.actions';
 import { javascript } from '@codemirror/lang-javascript';
 
@@ -48,6 +49,10 @@ export class RuleCreatorViewComponent implements OnInit {
   readonly frameworks = Framework;
   readonly categories = Category;
   readonly ruleTypes = RuleType;
+  readonly ressources = select(RuleCreatorState.ressources);
+  readonly testResultStatus = select(RuleCreatorState.testResultStatus);
+  readonly testResultDateTime = select(RuleCreatorState.testResultDateTime);
+  readonly testPassed = select(RuleCreatorState.testPassed);
 
   ngOnInit(): void {
     this.creatorForm = new FormGroup({
