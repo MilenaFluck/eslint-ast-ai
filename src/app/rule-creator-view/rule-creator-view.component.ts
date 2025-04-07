@@ -78,8 +78,10 @@ export class RuleCreatorViewComponent implements OnInit {
   }
 
   copyTest(): void {
+    navigator.clipboard.writeText(this.ruleForm.get('rule')?.value);
   }
 
   copyRule(): void {
+    navigator.clipboard.writeText(this.ruleForm.get('ruleTest')?.value);
   }
 }
