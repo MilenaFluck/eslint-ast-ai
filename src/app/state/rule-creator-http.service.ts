@@ -17,7 +17,6 @@ export class RuleCreatorHttpService {
     const body = {
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'You are a helpful assistant trained in ESLint.' },
         { role: 'user', content: userMessage }
       ]
     };
