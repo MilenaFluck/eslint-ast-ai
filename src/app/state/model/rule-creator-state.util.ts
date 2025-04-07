@@ -20,7 +20,7 @@ export namespace RuleCreatorStateUtil {
     ${createData.framework}. You can assume that I am using the eslint-plugin for ${createData.framework}.`;
     return `I want to write a custom lint rule with ESLint in JavaScript. The rule should be set up like this
     example: ${PromptConfig.example}. The rule should do the following: ${createData.description}. ${failureExample} The category is ${createData.category}
-    and the type is ${createData.type}. ${fixable} I also need you to write a test for the created rule. Here is an example test: ${PromptConfig.exampleTest}.
+    and the type is ${createData.type}. ${fixable} ${framework} I also need you to write a test for the created rule. Here is an example test: ${PromptConfig.exampleTest}.
     After creating the test make sure the test would run successfully. If not check on the rule and the test again according to requirements.
     Please return the rule and the test for the rule as JSON-object like this: { rule: ruleCideAsString; test: ruleTestCodeAsString }.`;
   }
