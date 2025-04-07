@@ -1,3 +1,4 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
@@ -20,5 +21,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       NgxsFormPluginModule.forRoot()
     ),
+    provideHttpClient()
   ]
 };

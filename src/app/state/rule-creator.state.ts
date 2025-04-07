@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, State, StateContext, StateToken } from '@ngxs/store';
 import { createDefault, RuleCreatorStateModel, RuleCreatorStateUtil } from './model';
+import { RuleCreatorHttpService } from './rule-creator-http.service';
 import { RuleCreatorActions } from './rule-creator.actions';
 
 export const RULE_CREATOR_STATE_TOKEN = new StateToken<RuleCreatorStateModel>('rule_creator');
@@ -12,11 +13,16 @@ export const RULE_CREATOR_STATE_TOKEN = new StateToken<RuleCreatorStateModel>('r
 @Injectable()
 export class RuleCreatorState {
 
+  constructor(private readonly ruleCreatorHttpService: RuleCreatorHttpService) {}
+
   @Action(RuleCreatorActions.Create)
   create(ctx: StateContext<RuleCreatorStateModel>): void {
     const createData = ctx.getState().creatorForm.model;
     if (createData) {
       const prompt = RuleCreatorStateUtil.createPrompt(createData);
+      this.ruleCreatorHttpService.sendMessage(prompt).subscribe(result => {
+        console.log(result);
+      });
     }
   }
 
