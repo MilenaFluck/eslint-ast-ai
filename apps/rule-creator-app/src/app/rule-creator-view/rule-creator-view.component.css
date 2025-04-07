@@ -1,0 +1,61 @@
+.left-container,
+.right-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+mat-form-field,
+mat-checkbox {
+  width: 100%;
+}
+
+.float-right {
+  margin-left: auto;
+}
+
+mat-toolbar {
+  background-image: linear-gradient(to bottom right, #dafae7, #aed1fc);
+}
+
+.title {
+  color: black;
+}
+
+.mat-mdc-unelevated-button:not(:disabled) {
+  background: #46e687;
+}
+
+.checkbox-label {
+  color: #3f4948;
+}
+
+.margin-top {
+  margin-top: 40px;
+}
+
+.mat-mdc-icon-button {
+  background-color: #61a6f9;
+}
+
+.ressources-container {
+  padding: 20px;
+  border: 1px solid #46e687;
+  border-radius: 6px;
+  background-color: #dafae7;
+  margin-top: 50px;
+}
+
+.passed {
+  color: #46e687;
+}
+
+.failed {
+  color: crimson;
+}

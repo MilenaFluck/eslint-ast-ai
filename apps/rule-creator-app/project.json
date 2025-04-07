@@ -1,0 +1,81 @@
+{
+  "name": "rule-creator-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "generators": {},
+  "sourceRoot": "apps/rule-creator-app/src",
+  "prefix": "app",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "options": {
+        "outputPath": "dist/apps/rule-creator-app",
+        "index": "apps/rule-creator-app/src/index.html",
+        "browser": "apps/rule-creator-app/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/rule-creator-app/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/rule-creator-app/public"
+          }
+        ],
+        "styles": [
+          "@angular/material/prebuilt-themes/cyan-orange.css",
+          "apps/rule-creator-app/src/styles.css"
+        ],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kB",
+              "maximumError": "1MB"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kB",
+              "maximumError": "8kB"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "rule-creator-app:build:production"
+        },
+        "development": {
+          "buildTarget": "rule-creator-app:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "proxyConfig": "proxy.conf.json"
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/rule-creator-app/**/*.ts",
+          "apps/rule-creator-app/**/*.html"
+        ]
+      }
+    }
+  }
+}

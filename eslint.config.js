@@ -1,7 +1,7 @@
 import eslint from '@eslint/js';
 import * as tseslint from 'typescript-eslint';
 import * as angular from 'angular-eslint';
-import customEslintPlugin from './eslint-rules/custom-eslint-plugin.js';
+import customEslintPlugin from './tools/eslint-rules/custom-eslint-plugin.js';
 
 export default tseslint.config(
   {
