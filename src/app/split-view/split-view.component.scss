@@ -1,0 +1,25 @@
+.resizable-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  container-type: inline-size;
+
+  .resizable-column {
+    flex-grow: 1;
+    overflow: auto;
+    position: relative;
+    container-type: inline-size;
+  }
+
+  .resizable-divider {
+    width: 5px;
+    cursor: ew-resize;
+    background-color: #ccc;
+    position: relative;
+  }
+}
+
+.left-content {
+  height: 100%;
+}

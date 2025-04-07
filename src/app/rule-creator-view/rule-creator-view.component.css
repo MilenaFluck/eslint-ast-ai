@@ -1,0 +1,43 @@
+.left-container, .right-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+mat-form-field, mat-checkbox {
+  width: 100%;
+}
+
+.float-right {
+  margin-left: auto;
+}
+
+mat-toolbar {
+  background-image: linear-gradient(to bottom right, #DAFAE7, #AED1FC);
+}
+
+.title {
+  color: black;
+}
+
+.mat-mdc-unelevated-button:not(:disabled) {
+  background: #46E687;
+}
+
+.checkbox-label {
+  color: #3f4948;
+}
+
+.margin-top {
+  margin-top: 40px;
+}
+
+.mat-mdc-icon-button {
+  background-color: #61A6F9;
+}

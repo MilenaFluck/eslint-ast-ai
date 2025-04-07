@@ -1,0 +1,14 @@
+<div class="resizable-container">
+  <!-- Main Content Area -->
+  <div class="resizable-column left-content" #leftContent>
+    <ng-content select="[left-container]"></ng-content>
+  </div>
+
+  <!-- Resizable Divider -->
+  <div class="resizable-divider" #divider></div>
+
+  <!-- Preview Area -->
+  <div class="resizable-column right-content" #rightContent>
+    <ng-content select="[right-container]"></ng-content>
+  </div>
+</div>

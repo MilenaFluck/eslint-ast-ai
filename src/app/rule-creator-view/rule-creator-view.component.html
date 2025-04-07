@@ -1,0 +1,85 @@
+<mat-toolbar>
+  <img src="http://localhost:4200/lint-e.png" width="50px">
+  <span class="title">Lint-E</span>
+  <button mat-flat-button class="float-right" (click)="export()">Export Rule</button>
+</mat-toolbar>
+
+<app-split-view>
+  <div left-container class="left-container">
+    <form [formGroup]="creatorForm" ngxsForm="rule_creator.creatorForm">
+
+      <div class="row">
+        <mat-form-field>
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" required></textarea>
+          <mat-error *ngIf="creatorForm.get('description')?.hasError('required')">Description is required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+        <mat-form-field>
+          <mat-label>Failure Example</mat-label>
+          <textarea matInput formControlName="failureExample"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="row">
+      <mat-form-field>
+        <mat-label>Framework</mat-label>
+        <mat-select formControlName="framework">
+          <mat-option *ngFor="let framework of [frameworks.ANGULAR, frameworks.REACT, frameworks.NONE]" [value]="framework">
+            {{ framework }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="creatorForm.get('framework')?.hasError('required')">Framework is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category">
+          <mat-option *ngFor="let category of [categories.ANGULAR, categories.BEST_PRACTICES, categories.POSSIBLE_ERRORS, categories.SECURITY, categories.PERFORMANCE, categories.DEPRECATED_LEGACY, categories.TYPESCRIPT, categories.TEST_RELATED, categories.CODE_QUALITY, categories.STYLISTIC_ISSUES, categories.REACT]" [value]="category">
+            {{ category }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+
+      <div class="row">
+      <mat-form-field>
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option *ngFor="let type of [ruleTypes.PROBLEM, ruleTypes.SUGGESTION, ruleTypes.LAYOUT]" [value]="type">
+            {{ type }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="fixable"><span class="checkbox-label">Fixable</span></mat-checkbox>
+      </div>
+    </form>
+    <button mat-flat-button class="float-right" (click)="create()">Create Rule</button>
+  </div>
+  <div right-container class="right-container">
+   <form [formGroup]="ruleForm" ngxsForm="rule_creator.ruleForm">
+     <div class="row">
+       <h3>Rule</h3>
+       <button mat-icon-button class="float-right" (click)="copyTest()">
+         <mat-icon fontIcon="content_copy"></mat-icon>
+       </button>
+     </div>
+     <app-codemirror-editor [extensions]="ruleEditorConfig" formControlName="rule">
+     </app-codemirror-editor>
+     <div class="row margin-top">
+       <h3>Test for Rule</h3>
+       <div class="float-right row">
+         <button mat-flat-button (click)="testRule()">Test Rule</button>
+         <button mat-icon-button (click)="copyTest()">
+           <mat-icon fontIcon="content_copy"></mat-icon>
+         </button>
+       </div>
+     </div>
+     <app-codemirror-editor [extensions]="ruleEditorConfig" formControlName="ruleTest">
+     </app-codemirror-editor>
+   </form>
+  </div>
+</app-split-view>
