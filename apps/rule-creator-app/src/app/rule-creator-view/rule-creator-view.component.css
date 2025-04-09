@@ -53,9 +53,13 @@ mat-toolbar {
 }
 
 .passed {
-  color: #46e687;
+  color: #006666;
+  margin-top: 15px;
+  font-size: 12px;
 }
 
 .failed {
   color: crimson;
+  margin-top: 15px;
+  font-size: 12px;
 }

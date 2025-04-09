@@ -32,6 +32,6 @@ export namespace RuleCreatorStateUtil {
     example: ${PromptConfig.example}. The rule should do the following: ${createData.description}. ${failureExample} The category is ${createData.category}
     and the type is ${createData.type}. ${fixable} ${framework} ${ressources} I also need you to write a test for the created rule. Here is an example test: ${PromptConfig.exampleTest}.
     After creating the test make sure the test would run successfully. If not check on the rule and the test again according to requirements.
-    Please return the rule and the test for the rule as JSON-object like this: { rule: ruleCideAsString; test: ruleTestCodeAsString }.`;
+    ${PromptConfig.responseFormat}. Here is a valid example: ${PromptConfig.responseFormatExample}. Do not give me anything but the JSON Object as string!`;
   }
 }

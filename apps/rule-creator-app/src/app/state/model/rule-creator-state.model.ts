@@ -6,7 +6,7 @@ import { TestResult } from './test-result.enum';
 export interface RuleCreatorStateModel {
   creatorForm: FormState<RuleCreatorForm>;
   ruleForm: FormState<RuleForm>;
-  testResult: { status: TestResult; dateTime: string } | null;
+  testResult: { status: TestResult; dateTime: Date; errorMessage?: string } | null;
   apiKey: string | null;
 }
 

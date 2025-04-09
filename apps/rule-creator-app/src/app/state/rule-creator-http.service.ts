@@ -1,19 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class RuleCreatorHttpService {
-  private apiUrl = '/api/gpt'; // Update to match your backend API endpoint
+  private apiUrl = '/api';
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(message: string, apiKey: string) {
-    const body = {
-      message, // The user message
-      apiKey
-    };
+  sendMessage(message: string, apiKey: string): Observable<{ success: boolean, message: { rule: string; ruleTest: string; } }> {
+    return this.http.post<{ success: boolean, message: { rule: string; ruleTest: string; } }>(`${this.apiUrl}/gpt`, { message, apiKey }).pipe();
+  }
 
-    // Send the request to your backend endpoint
-    return this.http.post(this.apiUrl, body);
+  runTest(codeToTest: string, testCode: string): Observable<unknown> {
+    return this.http.post<unknown>(`${this.apiUrl}/run-test`, { codeToTest, testCode }).pipe();
   }
 }

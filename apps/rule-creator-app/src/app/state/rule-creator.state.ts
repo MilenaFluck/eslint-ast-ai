@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
+import { UpdateFormValue } from '@ngxs/form-plugin';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
+import { catchError, mergeMap, ObservableInput, of } from 'rxjs';
 import { Framework, frameworkToRessourcesMap, Ressources } from '../model';
-import {
-  createDefault,
-  RuleCreatorStateModel,
-  RuleCreatorStateUtil,
-  TestResult,
-} from './model';
+import { createDefault, RuleCreatorStateModel, RuleCreatorStateUtil, TestResult, } from './model';
 import { RuleCreatorHttpService } from './rule-creator-http.service';
 import { RuleCreatorActions } from './rule-creator.actions';
 
@@ -32,7 +29,7 @@ export class RuleCreatorState {
   }
 
   @Selector()
-  static testResultDateTime(state: RuleCreatorStateModel): string | null {
+  static testResultDateTime(state: RuleCreatorStateModel): Date | null {
     return state.testResult?.dateTime ?? null;
   }
 
@@ -42,21 +39,41 @@ export class RuleCreatorState {
   }
 
   constructor(
-    private readonly ruleCreatorHttpService: RuleCreatorHttpService
+    private readonly ruleCreatorHttpService: RuleCreatorHttpService,
   ) {}
 
   @Action(RuleCreatorActions.Create)
-  create(ctx: StateContext<RuleCreatorStateModel>): void {
+  create(ctx: StateContext<RuleCreatorStateModel>): ObservableInput<any> {
     const state = ctx.getState();
     const createData = state.creatorForm.model;
+
     if (createData) {
       const prompt = RuleCreatorStateUtil.createPrompt(createData);
-      if (!state.apiKey) return;
-      this.ruleCreatorHttpService.sendMessage(prompt, state.apiKey).subscribe((result) => {
-        console.log(result);
-      });
+
+      if (!state.apiKey) {
+        return of(null);
+      }
+
+      return this.ruleCreatorHttpService.sendMessage(prompt, state.apiKey)
+        .pipe(
+          mergeMap(result => {
+            const resultMessage = result.message;
+            const promptResult = resultMessage;
+            const rule = promptResult.rule;
+            const ruleTest = promptResult.ruleTest;
+            ctx.dispatch(new UpdateFormValue({
+              value: { rule, ruleTest },
+              path: 'rule_creator.ruleForm'
+            }));
+
+            return of(null); // Returning an observable to complete the action
+          })
+        );
     }
+
+    return of(null); // Return observable if createData is falsy
   }
+
 
   @Action(RuleCreatorActions.Export)
   export(ctx: StateContext<RuleCreatorStateModel>): void {
@@ -68,7 +85,25 @@ export class RuleCreatorState {
   }
 
   @Action(RuleCreatorActions.Test)
-  test(ctx: StateContext<RuleCreatorStateModel>): void {}
+  test(ctx: StateContext<RuleCreatorStateModel>): ObservableInput<any> {
+    const ruleForm = ctx.getState().ruleForm.model;
+    if (!ruleForm) return of(null);
+    return this.ruleCreatorHttpService.runTest(ruleForm.rule, ruleForm.ruleTest).pipe(
+      mergeMap(result => {
+        ctx.patchState({
+          testResult: { status: TestResult.PASSED, dateTime: new Date() }
+        });
+        return of(result);
+      }),
+      catchError(error => {
+        ctx.patchState({
+          testResult: { status: TestResult.FAILED, dateTime: new Date() }
+        });
+        return of(null);
+      })
+    );
+  }
+
 
   @Action(RuleCreatorActions.RemoveKey)
   removeKey(ctx: StateContext<RuleCreatorStateModel>): void {

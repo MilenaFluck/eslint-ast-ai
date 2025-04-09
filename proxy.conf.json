@@ -1,12 +1,12 @@
 {
   "/api": {
-    "target": "http://localhost:3333", // Matches the backend host
+    "target": "http://localhost:3333",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
   },
   "/assets": {
-    "target": "http://localhost:3333", // Matches the backend for assets
+    "target": "http://localhost:3333",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"
