@@ -47,10 +47,12 @@ export class RuleCreatorState {
 
   @Action(RuleCreatorActions.Create)
   create(ctx: StateContext<RuleCreatorStateModel>): void {
-    const createData = ctx.getState().creatorForm.model;
+    const state = ctx.getState();
+    const createData = state.creatorForm.model;
     if (createData) {
       const prompt = RuleCreatorStateUtil.createPrompt(createData);
-      this.ruleCreatorHttpService.sendMessage(prompt).subscribe((result) => {
+      if (!state.apiKey) return;
+      this.ruleCreatorHttpService.sendMessage(prompt, state.apiKey).subscribe((result) => {
         console.log(result);
       });
     }
@@ -67,4 +69,18 @@ export class RuleCreatorState {
 
   @Action(RuleCreatorActions.Test)
   test(ctx: StateContext<RuleCreatorStateModel>): void {}
+
+  @Action(RuleCreatorActions.RemoveKey)
+  removeKey(ctx: StateContext<RuleCreatorStateModel>): void {
+    ctx.patchState({
+      apiKey: null
+    })
+  }
+
+  @Action(RuleCreatorActions.AddKey)
+  addKey(ctx: StateContext<RuleCreatorStateModel>, { apiKey }: RuleCreatorActions.AddKey): void {
+    ctx.patchState({
+      apiKey
+    })
+  }
 }

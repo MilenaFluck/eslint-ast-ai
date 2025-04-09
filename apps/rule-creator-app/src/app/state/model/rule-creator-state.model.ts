@@ -7,6 +7,7 @@ export interface RuleCreatorStateModel {
   creatorForm: FormState<RuleCreatorForm>;
   ruleForm: FormState<RuleForm>;
   testResult: { status: TestResult; dateTime: string } | null;
+  apiKey: string | null;
 }
 
 export function createDefault(): RuleCreatorStateModel {
@@ -14,5 +15,6 @@ export function createDefault(): RuleCreatorStateModel {
     creatorForm: FormStateUtil.create(),
     ruleForm: FormStateUtil.create(),
     testResult: null,
+    apiKey: null,
   };
 }

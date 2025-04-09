@@ -1,9 +1,19 @@
 <mat-toolbar>
   <img src="http://localhost:4200/lint-e.png" width="50px" />
   <span class="title">Lint-E</span>
-  <button mat-flat-button class="float-right" (click)="export()">
-    Export Rule
-  </button>
+  <div class="float-right row">
+      <button mat-raised-button (click)="openApiKeyDialog()">
+        <mat-icon fontIcon="key"></mat-icon>
+        Add API Key
+      </button>
+      <button mat-raised-button (click)="removeApiKey()">
+        <mat-icon fontIcon="key_off"></mat-icon>
+        Remove API Key
+      </button>
+      <button mat-flat-button (click)="export()">
+        Export Rule
+      </button>
+  </div>
 </mat-toolbar>
 
 <app-split-view>

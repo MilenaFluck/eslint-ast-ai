@@ -1,24 +1,19 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class RuleCreatorHttpService {
-  private apiUrl = '/openai/v1/chat/completions';
-  private apiKey = '';
+  private apiUrl = '/api/gpt'; // Update to match your backend API endpoint
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(userMessage: string) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.apiKey}`,
-    });
-
+  sendMessage(message: string, apiKey: string) {
     const body = {
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: userMessage }],
+      message, // The user message
+      apiKey
     };
 
-    return this.http.post(this.apiUrl, body, { headers });
+    // Send the request to your backend endpoint
+    return this.http.post(this.apiUrl, body);
   }
 }
