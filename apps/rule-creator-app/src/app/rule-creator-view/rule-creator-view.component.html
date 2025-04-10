@@ -110,6 +110,40 @@
           ><span class="checkbox-label">Fixable</span></mat-checkbox
         >
       </div>
+      <div class="row">
+        <mat-form-field>
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="buildTool">
+            <mat-option
+              *ngFor="
+                let type of [
+                  buildTool.NONE,
+                  buildTool.NX,
+                ]
+              "
+              [value]="type"
+            >
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Type</mat-label>
+          <mat-select formControlName="esLintVersion">
+            <mat-option
+              *ngFor="
+                let type of [
+                  esLintVersion.V_8,
+                  esLintVersion.V_9,
+                ]
+              "
+              [value]="type"
+            >
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </form>
     <button mat-flat-button class="float-right" (click)="create()">
       Create Rule
@@ -118,6 +152,11 @@
       <span
         >Here you find more information on core rules and how to set up linting in
         your project: <a [href]="ressources()" target="_blank">{{ ressources() }}</a></span
+      >
+    </div>
+    <div class="ressources-container row" *ngIf="ressourcesBuildTool()">
+      <span
+      >Here you find more information on how to set up EsLint with your build tool: <a [href]="ressourcesBuildTool()" target="_blank">{{ ressourcesBuildTool() }}</a></span
       >
     </div>
   </div>
@@ -144,7 +183,7 @@
             {{
               testResultStatus() +
                 ' at ' +
-                (testResultDateTime() | date : 'shortTime')
+                ((testResultDateTime() ?? '') | date : 'shortTime')
             }}
           </span>
           <button mat-flat-button (click)="testRule()">Test Rule</button>

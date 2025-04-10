@@ -22,7 +22,7 @@ import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { select, Store } from '@ngxs/store';
 import { basicSetup } from 'codemirror';
 import { CodemirrorEditorComponent } from '../codemirror-editor/codemirror-editor.component';
-import { Category, Framework, RuleType } from '../model';
+import { BuildTool, Category, EslintVersion, Framework, RuleType } from '../model';
 import { SplitViewComponent } from '../split-view';
 import { RuleCreatorState } from '../state';
 import { RuleCreatorActions } from '../state/rule-creator.actions';
@@ -58,8 +58,11 @@ export class RuleCreatorViewComponent implements OnInit {
   readonly frameworks = Framework;
   readonly categories = Category;
   readonly ruleTypes = RuleType;
+  readonly buildTool = BuildTool;
+  readonly esLintVersion = EslintVersion;
 
   readonly ressources = select(RuleCreatorState.ressources);
+  readonly ressourcesBuildTool = select(RuleCreatorState.ressourcesBuildTool);
   readonly testResultStatus = select(RuleCreatorState.testResultStatus);
   readonly testResultDateTime = select(RuleCreatorState.testResultDateTime);
   readonly testPassed = select(RuleCreatorState.testPassed);
@@ -74,6 +77,8 @@ export class RuleCreatorViewComponent implements OnInit {
       type: new FormControl(RuleType.PROBLEM),
       failureExample: new FormControl(null),
       fixable: new FormControl(false),
+      buildTool: new FormControl(BuildTool.NONE),
+      esLintVersion: new FormControl(EslintVersion.V_9)
     });
 
     this.ruleForm = new FormGroup({

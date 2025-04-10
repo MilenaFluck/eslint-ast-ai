@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { UpdateFormValue } from '@ngxs/form-plugin';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { catchError, mergeMap, ObservableInput, of } from 'rxjs';
-import { Framework, frameworkToRessourcesMap, Ressources } from '../model';
+import { BuildTool, buildToolToRessourcesMap, Framework, frameworkToRessourcesMap, Ressources, RessourcesBuildTool } from '../model';
 import { createDefault, RuleCreatorStateModel, RuleCreatorStateUtil, TestResult, } from './model';
 import { RuleCreatorHttpService } from './rule-creator-http.service';
 import { RuleCreatorActions } from './rule-creator.actions';
@@ -21,6 +21,12 @@ export class RuleCreatorState {
   static ressources(state: RuleCreatorStateModel): Ressources | undefined {
     const framework = state.creatorForm.model?.framework ?? Framework.NONE;
     return frameworkToRessourcesMap.get(framework);
+  }
+
+  @Selector()
+  static ressourcesBuildTool(state: RuleCreatorStateModel): RessourcesBuildTool | undefined {
+    const buildTool = state.creatorForm.model?.buildTool ?? BuildTool.NONE;
+    return buildToolToRessourcesMap.get(buildTool);
   }
 
   @Selector()

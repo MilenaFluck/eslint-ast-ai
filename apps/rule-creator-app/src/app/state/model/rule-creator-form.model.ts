@@ -1,4 +1,4 @@
-import { Category, Framework, RuleType } from '../../model';
+import { BuildTool, Category, EslintVersion, Framework, RuleType } from '../../model';
 
 export interface RuleCreatorForm {
   framework: Framework;
@@ -6,5 +6,7 @@ export interface RuleCreatorForm {
   category: Category;
   type: RuleType;
   failureExample: string;
+  buildTool: BuildTool;
+  esLintVersion: EslintVersion;
   fixable: boolean;
 }

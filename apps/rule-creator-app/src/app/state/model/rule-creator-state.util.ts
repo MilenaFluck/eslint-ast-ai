@@ -31,7 +31,8 @@ export namespace RuleCreatorStateUtil {
     return `I want to write a custom lint rule with ESLint in JavaScript. The rule should be set up like this
     example: ${PromptConfig.example}. The rule should do the following: ${createData.description}. ${failureExample} The category is ${createData.category}
     and the type is ${createData.type}. ${fixable} ${framework} ${ressources} I also need you to write a test for the created rule. Here is an example test: ${PromptConfig.exampleTest}.
-    After creating the test make sure the test would run successfully. If not check on the rule and the test again according to requirements.
+    After creating the test make sure the test would run successfully. If not check on the rule and the test again according to requirements. Also make sure the
+    rule is compatible with EsLint Version ${createData.esLintVersion}. It has to be compatible with any minor or patch of the stated major version.
     ${PromptConfig.responseFormat}. Here is a valid example: ${PromptConfig.responseFormatExample}. Do not give me anything but the JSON Object as string!`;
   }
 }
