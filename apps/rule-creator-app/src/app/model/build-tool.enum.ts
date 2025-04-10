@@ -1,4 +1,5 @@
 export enum BuildTool {
   NX = 'Nx',
-  NONE = 'None'
+  NONE = 'None',
+  TURBOREPO = 'Turborepo'
 }

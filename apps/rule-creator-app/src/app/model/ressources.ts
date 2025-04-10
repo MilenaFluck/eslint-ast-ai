@@ -17,9 +17,11 @@ export const frameworkToRessourcesMap = new Map<Framework, Ressources>([
 
 export enum RessourcesBuildTool {
   NX = 'https://nx.dev/nx-api/eslint',
+  TURBOREPO = 'https://turbo.build/docs/reference/eslint-config-turbo'
 }
 
 export const buildToolToRessourcesMap = new Map<BuildTool, RessourcesBuildTool | undefined>([
   [BuildTool.NX, RessourcesBuildTool.NX],
+  [BuildTool.TURBOREPO, RessourcesBuildTool.TURBOREPO],
   [BuildTool.NONE, undefined]
 ]);
