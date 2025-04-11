@@ -206,7 +206,7 @@
         </div>
       </div>
       <div *ngFor="let message of lintResultMessages()">
-          <div class="lint-message-container">In line {{ message.line }} starting at {{ message.column }} and ending at {{ message.endColumn }} lint found
+          <div class="lint-message-container">In line {{ message.line }} we found
           a broken rule with severity {{ message.severity }} on node type {{ message.nodeType }}. {{ message.message }}</div>
       </div>
       <app-codemirror-editor

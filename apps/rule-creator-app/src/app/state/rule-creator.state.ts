@@ -73,6 +73,10 @@ export class RuleCreatorState {
         return of(null);
       }
 
+      ctx.patchState({
+        lintResult: null
+      });
+
       return this.ruleCreatorHttpService.sendMessage(prompt, state.apiKey)
         .pipe(
           mergeMap(result => {
@@ -107,11 +111,10 @@ export class RuleCreatorState {
     const ruleForm = ctx.getState().ruleForm.model;
     if (!ruleForm) return of(null);
 
-    return this.ruleCreatorHttpService.lint(ruleForm.ruleCommonJs, ruleForm.badExampleCode).pipe(
+    const ruleCommonJs = ruleForm.ruleCommonJs.replace(/^.*?(module\.exports)/s, '$1')
+    return this.ruleCreatorHttpService.lint(ruleCommonJs, ruleForm.badExampleCode).pipe(
       mergeMap(result => {
         const status = result.length > 0 ? LintResult.FAILED : LintResult.PASSED;
-
-        console.log(result);
 
         ctx.patchState({
           lintResult: {
