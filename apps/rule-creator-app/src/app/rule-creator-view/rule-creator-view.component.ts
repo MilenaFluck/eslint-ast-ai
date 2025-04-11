@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, model, OnInit, } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,7 +15,7 @@ import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { select, Store } from '@ngxs/store';
 import { basicSetup } from 'codemirror';
 import { CodemirrorEditorComponent } from '../codemirror-editor/codemirror-editor.component';
-import { BuildTool, Category, EslintVersion, Framework, RuleType } from '../model';
+import { BuildTool, Category, EslintVersion, Framework, ModuleSystem, RuleType } from '../model';
 import { SplitViewComponent } from '../split-view';
 import { RuleCreatorState } from '../state';
 import { RuleCreatorActions } from '../state/rule-creator.actions';
@@ -39,6 +40,7 @@ import { RuleCreatorActions } from '../state/rule-creator.actions';
     SplitViewComponent,
     MatToolbarModule,
     CodemirrorEditorComponent,
+    MatButtonToggleModule,
   ],
 })
 export class RuleCreatorViewComponent implements OnInit {
@@ -52,6 +54,9 @@ export class RuleCreatorViewComponent implements OnInit {
   readonly ruleTypes = RuleType;
   readonly buildTool = BuildTool;
   readonly esLintVersion = EslintVersion;
+
+  readonly moduleSystem = ModuleSystem;
+  selectedModuleSystem = this.moduleSystem.ES_MODULES;
 
   readonly ressources = select(RuleCreatorState.ressources);
   readonly ressourcesBuildTool = select(RuleCreatorState.ressourcesBuildTool);
@@ -75,7 +80,8 @@ export class RuleCreatorViewComponent implements OnInit {
     });
 
     this.ruleForm = new FormGroup({
-      rule: new FormControl(null),
+      ruleEsModules: new FormControl(null),
+      ruleCommonJs: new FormControl(null),
       badExampleCode: new FormControl(null),
     });
   }
@@ -85,7 +91,7 @@ export class RuleCreatorViewComponent implements OnInit {
   }
 
   export(): void {
-    this.store.dispatch(new RuleCreatorActions.Export());
+    this.store.dispatch(new RuleCreatorActions.Export(this.selectedModuleSystem));
   }
 
   lintRule(): void {
@@ -93,7 +99,11 @@ export class RuleCreatorViewComponent implements OnInit {
   }
 
   copyRule(): void {
-    navigator.clipboard.writeText(this.ruleForm.get('rule')?.value);
+    if (this.selectedModuleSystem === ModuleSystem.ES_MODULES) {
+      navigator.clipboard.writeText(this.ruleForm.get('ruleEsModules')?.value);
+    } else {
+      navigator.clipboard.writeText(this.ruleForm.get('ruleCommonJs')?.value);
+    }
   }
 
   removeApiKey(): void {

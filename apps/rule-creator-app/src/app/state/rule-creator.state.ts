@@ -2,7 +2,15 @@ import { Injectable } from '@angular/core';
 import { UpdateFormValue } from '@ngxs/form-plugin';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import { mergeMap, Observable, ObservableInput, of } from 'rxjs';
-import { BuildTool, buildToolToRessourcesMap, Framework, frameworkToRessourcesMap, Ressources, RessourcesBuildTool } from '../model';
+import {
+  BuildTool,
+  buildToolToRessourcesMap,
+  Framework,
+  frameworkToRessourcesMap,
+  ModuleSystem,
+  Ressources,
+  RessourcesBuildTool
+} from '../model';
 import { createDefault, LintResult, LintResultModel, RuleCreatorStateModel, RuleCreatorStateUtil, } from './model';
 import { RuleCreatorHttpService } from './rule-creator-http.service';
 import { RuleCreatorActions } from './rule-creator.actions';
@@ -70,10 +78,11 @@ export class RuleCreatorState {
           mergeMap(result => {
             const resultMessage = result.message;
             const promptResult = resultMessage;
-            const rule = promptResult.rule;
+            const ruleEsModules = promptResult.ruleEsModules;
+            const ruleCommonJs = promptResult.ruleCommonJs;
             const badExampleCode = promptResult.badExampleCode;
             ctx.dispatch(new UpdateFormValue({
-              value: { rule, badExampleCode },
+              value: { ruleEsModules, ruleCommonJs, badExampleCode },
               path: 'rule_creator.ruleForm'
             }));
 
@@ -87,9 +96,9 @@ export class RuleCreatorState {
 
 
   @Action(RuleCreatorActions.Export)
-  export(ctx: StateContext<RuleCreatorStateModel>): void {
-    const state = ctx.getState();
-    const rule = state.ruleForm.model?.rule;
+  export(ctx: StateContext<RuleCreatorStateModel>, { moduleSystem }: RuleCreatorActions.Export): void {
+    const ruleFormModel = ctx.getState().ruleForm.model;
+    const rule = (moduleSystem === ModuleSystem.ES_MODULES ) ? ruleFormModel?.ruleEsModules : ruleFormModel?.ruleCommonJs;
     if (rule) RuleCreatorStateUtil.exportToJsFile(rule, 'rule');
   }
 
@@ -98,7 +107,7 @@ export class RuleCreatorState {
     const ruleForm = ctx.getState().ruleForm.model;
     if (!ruleForm) return of(null);
 
-    return this.ruleCreatorHttpService.lint(ruleForm.rule, ruleForm.badExampleCode).pipe(
+    return this.ruleCreatorHttpService.lint(ruleForm.ruleCommonJs, ruleForm.badExampleCode).pipe(
       mergeMap(result => {
         const status = result.length > 0 ? LintResult.FAILED : LintResult.PASSED;
 

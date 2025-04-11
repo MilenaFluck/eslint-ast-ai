@@ -163,6 +163,14 @@
   </div>
   <div right-container class="right-container">
     <form [formGroup]="ruleForm" ngxsForm="rule_creator.ruleForm">
+      <mat-button-toggle-group name="moduleSystem" aria-label="Module System">
+        <mat-button-toggle
+          [value]="moduleSystem.ES_MODULES"
+          (click)="selectedModuleSystem = moduleSystem.ES_MODULES"
+        >{{ moduleSystem.ES_MODULES }}</mat-button-toggle>
+        <mat-button-toggle [value]="moduleSystem.COMMON_JS" (click)="selectedModuleSystem = moduleSystem.COMMON_JS">{{ moduleSystem.COMMON_JS }}</mat-button-toggle>
+      </mat-button-toggle-group>
+
       <div class="row">
         <h3>Rule</h3>
         <button mat-icon-button class="float-right" (click)="copyRule()">
@@ -171,7 +179,14 @@
       </div>
       <app-codemirror-editor
         [extensions]="ruleEditorConfig"
-        formControlName="rule"
+        formControlName="ruleEsModules"
+        [ngClass]="{ hidden: (selectedModuleSystem === moduleSystem.COMMON_JS) }"
+      >
+      </app-codemirror-editor>
+      <app-codemirror-editor
+        [extensions]="ruleEditorConfig"
+        formControlName="ruleCommonJs"
+        [ngClass]="{ hidden: (selectedModuleSystem === moduleSystem.ES_MODULES) }"
       >
       </app-codemirror-editor>
       <div class="row margin-top">

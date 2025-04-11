@@ -9,8 +9,8 @@ export class RuleCreatorHttpService {
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(message: string, apiKey: string): Observable<{ success: boolean, message: { rule: string; badExampleCode: string; } }> {
-    return this.http.post<{ success: boolean, message: { rule: string; badExampleCode: string; } }>(`${this.apiUrl}/gpt`, { message, apiKey }).pipe();
+  sendMessage(message: string, apiKey: string): Observable<{ success: boolean, message: { ruleEsModules: string; ruleCommonJs: string; badExampleCode: string; } }> {
+    return this.http.post<{ success: boolean, message: { ruleEsModules: string; ruleCommonJs: string; badExampleCode: string; } }>(`${this.apiUrl}/gpt`, { message, apiKey }).pipe();
   }
 
   lint(rule: string, badExampleCode: string): Observable<LintResultModel[]> {

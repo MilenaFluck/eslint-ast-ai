@@ -1,4 +1,5 @@
 export interface RuleForm {
-  rule: string;
+  ruleEsModules: string;
+  ruleCommonJs: string;
   badExampleCode: string;
 }

@@ -1,3 +1,5 @@
+import { ModuleSystem } from '../model';
+
 export namespace RuleCreatorActions {
   export class Create {
     static readonly type = '[Rule] Create';
@@ -5,6 +7,8 @@ export namespace RuleCreatorActions {
 
   export class Export {
     static readonly type = '[Rule] Export';
+
+    constructor(public readonly moduleSystem: ModuleSystem) {}
   }
 
   export class Lint {

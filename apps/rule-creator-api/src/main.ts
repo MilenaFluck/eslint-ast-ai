@@ -37,7 +37,7 @@ app.post('/api/gpt', async (req, res) => {
   //   max_output_tokens: 1000,
   // });
 
-  const response = "```json\n{\n  \"rule\": \"import { Rule } from 'eslint';\\n\\nexport function useJestImports(context: Rule.RuleContext): Rule.RuleListener {\\n  return {\\n    ImportDeclaration(node) {\\n      const sourceValue = node.source.value;\\n      if (\\n        sourceValue === '@ngneat/spectator' &&\\n        !sourceValue.includes('jest')\\n      ) {\\n        context.report({\\n          node,\\n          message: `By default, Spectator uses Jasmine for creating spies. Please use import path @ngneat/spectator/jest in order to let Spectator create Jest-compatible spies.`,\\n          fix: function (fixer) {\\n            return fixer.replaceText(node.source, \\\"'@ngneat/spectator/jest'\\\");\\n          },\\n        });\\n      }\\n    },\\n  };\\n}\",\n  \"badExampleCode\": \"import { createComponent } from '@ngneat/spectator';\"```";
+  const response = "```json\n{\n  \"ruleEsModules\": \"import { Rule } from 'eslint';\\n\\nexport function useJestImports(context: Rule.RuleContext): Rule.RuleListener {\\n  return {\\n    ImportDeclaration(node) {\\n      const sourceValue = node.source.value;\\n      if (\\n        sourceValue === '@ngneat/spectator' &&\\n        !sourceValue.includes('jest')\\n      ) {\\n        context.report({\\n          node,\\n          message: `By default, Spectator uses Jasmine for creating spies. Please use import path @ngneat/spectator/jest in order to let Spectator create Jest-compatible spies.`,\\n          fix: function (fixer) {\\n            return fixer.replaceText(node.source, \\\"'@ngneat/spectator/jest'\\\");\\n          },\\n        });\\n      }\\n    },\\n  };\\n}\",\n  \"badExampleCode\": \"import { createComponent } from '@ngneat/spectator';\"```";
   const cleanedResponse = response.replace(/```json|```/g, '').trim();
 
   try {
@@ -111,7 +111,6 @@ module.exports = [
       });
       stdout = result.stdout;
     } catch (error: any) {
-      // ESLint returns code 1 when it finds linting errors — that's fine
       if (error.stdout) {
         stdout = error.stdout;
       } else {
@@ -122,7 +121,7 @@ module.exports = [
 
     try {
       const lintResult = JSON.parse(stdout);
-      res.json(lintResult[0].messages); // return entire array if needed
+      res.json(lintResult[0].messages);
     } catch (parseErr) {
       console.error('Failed to parse ESLint output:', parseErr);
       res.status(500).json({ error: 'Failed to parse ESLint output.' });
