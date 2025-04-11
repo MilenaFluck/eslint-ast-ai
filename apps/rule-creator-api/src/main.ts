@@ -30,8 +30,6 @@ app.post('/api/gpt', async (req, res) => {
     max_output_tokens: 1000,
   });
 
-  // const cleanedResponse = "```json\n{\n  \"ruleEsModules\": \"import { Rule } from 'eslint';\\n\\nexport function useJestImports(context: Rule.RuleContext): Rule.RuleListener {\\n  return {\\n    ImportDeclaration(node) {\\n      const sourceValue = node.source.value;\\n      if (\\n        sourceValue === '@ngneat/spectator' &&\\n        !sourceValue.includes('jest')\\n      ) {\\n        context.report({\\n          node,\\n          message: `By default, Spectator uses Jasmine for creating spies. Please use import path @ngneat/spectator/jest in order to let Spectator create Jest-compatible spies.`,\\n          fix: function (fixer) {\\n            return fixer.replaceText(node.source, \\\"'@ngneat/spectator/jest'\\\");\\n          },\\n        });\\n      }\\n    },\\n  };\\n}\",\n  \"badExampleCode\": \"import { createComponent } from '@ngneat/spectator';\"```";
-
   const cleanedResponse = response.output_text.replace(/```json|```/g, '').trim();
 
   try {
