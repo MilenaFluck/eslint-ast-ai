@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { LintResultModel } from './model';
 
 @Injectable({ providedIn: 'root' })
 export class RuleCreatorHttpService {
@@ -8,11 +9,11 @@ export class RuleCreatorHttpService {
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(message: string, apiKey: string): Observable<{ success: boolean, message: { rule: string; ruleTest: string; } }> {
-    return this.http.post<{ success: boolean, message: { rule: string; ruleTest: string; } }>(`${this.apiUrl}/gpt`, { message, apiKey }).pipe();
+  sendMessage(message: string, apiKey: string): Observable<{ success: boolean, message: { rule: string; badExampleCode: string; } }> {
+    return this.http.post<{ success: boolean, message: { rule: string; badExampleCode: string; } }>(`${this.apiUrl}/gpt`, { message, apiKey }).pipe();
   }
 
-  runTest(codeToTest: string, testCode: string): Observable<unknown> {
-    return this.http.post<unknown>(`${this.apiUrl}/run-test`, { codeToTest, testCode }).pipe();
+  lint(rule: string, badExampleCode: string): Observable<LintResultModel[]> {
+    return this.http.post<LintResultModel[]>(`${this.apiUrl}/lint`, { rule, badExampleCode }).pipe();
   }
 }

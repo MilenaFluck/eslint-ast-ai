@@ -175,27 +175,28 @@
       >
       </app-codemirror-editor>
       <div class="row margin-top">
-        <h3>Test for Rule</h3>
+        <h3>Code example to lint</h3>
         <div class="float-right row">
           <span
-            *ngIf="testResultStatus()"
-            [ngClass]="{ passed: testPassed(), failed: !testPassed() }"
+            *ngIf="lintResultStatus()"
+            [ngClass]="{ passed: lintPassed(), failed: !lintPassed() }"
           >
             {{
-              testResultStatus() +
+              lintResultStatus() +
                 ' at ' +
-                ((testResultDateTime() ?? '') | date : 'shortTime')
+                ((lintResultDateTime() ?? '') | date : 'shortTime')
             }}
           </span>
-          <button mat-flat-button (click)="testRule()">Test Rule</button>
-          <button mat-icon-button (click)="copyTest()">
-            <mat-icon fontIcon="content_copy"></mat-icon>
-          </button>
+          <button mat-flat-button (click)="lintRule()">Lint Code</button>
         </div>
+      </div>
+      <div *ngFor="let message of lintResultMessages()">
+          <div class="lint-message-container">In line {{ message.line }} starting at {{ message.column }} and ending at {{ message.endColumn }} lint found
+          a broken rule with severity {{ message.severity }} on node type {{ message.nodeType }}. {{ message.message }}</div>
       </div>
       <app-codemirror-editor
         [extensions]="ruleEditorConfig"
-        formControlName="ruleTest"
+        formControlName="badExampleCode"
       >
       </app-codemirror-editor>
     </form>

@@ -7,8 +7,8 @@ export namespace RuleCreatorActions {
     static readonly type = '[Rule] Export';
   }
 
-  export class Test {
-    static readonly type = '[Rule] Test';
+  export class Lint {
+    static readonly type = '[Rule] Lint';
   }
 
   export class RemoveKey {

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { UpdateFormValue } from '@ngxs/form-plugin';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
-import { catchError, mergeMap, ObservableInput, of } from 'rxjs';
+import { mergeMap, Observable, ObservableInput, of } from 'rxjs';
 import { BuildTool, buildToolToRessourcesMap, Framework, frameworkToRessourcesMap, Ressources, RessourcesBuildTool } from '../model';
-import { createDefault, RuleCreatorStateModel, RuleCreatorStateUtil, TestResult, } from './model';
+import { createDefault, LintResult, LintResultModel, RuleCreatorStateModel, RuleCreatorStateUtil, } from './model';
 import { RuleCreatorHttpService } from './rule-creator-http.service';
 import { RuleCreatorActions } from './rule-creator.actions';
 
@@ -30,18 +30,23 @@ export class RuleCreatorState {
   }
 
   @Selector()
-  static testResultStatus(state: RuleCreatorStateModel): TestResult | null {
-    return state.testResult?.status ?? null;
+  static lintResultStatus(state: RuleCreatorStateModel): LintResult | null {
+    return state.lintResult?.status ?? null;
   }
 
   @Selector()
-  static testResultDateTime(state: RuleCreatorStateModel): Date | null {
-    return state.testResult?.dateTime ?? null;
+  static lintResultMessages(state: RuleCreatorStateModel): LintResultModel[] {
+    return state.lintResult?.messages ?? [];
   }
 
   @Selector()
-  static testPassed(state: RuleCreatorStateModel): boolean {
-    return state.testResult?.status === TestResult.PASSED;
+  static lintResultDateTime(state: RuleCreatorStateModel): Date | null {
+    return state.lintResult?.dateTime ?? null;
+  }
+
+  @Selector()
+  static lintPassed(state: RuleCreatorStateModel): boolean {
+    return state.lintResult?.status === LintResult.PASSED;
   }
 
   constructor(
@@ -66,18 +71,18 @@ export class RuleCreatorState {
             const resultMessage = result.message;
             const promptResult = resultMessage;
             const rule = promptResult.rule;
-            const ruleTest = promptResult.ruleTest;
+            const badExampleCode = promptResult.badExampleCode;
             ctx.dispatch(new UpdateFormValue({
-              value: { rule, ruleTest },
+              value: { rule, badExampleCode },
               path: 'rule_creator.ruleForm'
             }));
 
-            return of(null); // Returning an observable to complete the action
+            return of(null);
           })
         );
     }
 
-    return of(null); // Return observable if createData is falsy
+    return of(null);
   }
 
 
@@ -85,27 +90,29 @@ export class RuleCreatorState {
   export(ctx: StateContext<RuleCreatorStateModel>): void {
     const state = ctx.getState();
     const rule = state.ruleForm.model?.rule;
-    const ruleTest = state.ruleForm.model?.ruleTest;
     if (rule) RuleCreatorStateUtil.exportToJsFile(rule, 'rule');
-    if (ruleTest) RuleCreatorStateUtil.exportToJsFile(ruleTest, 'rule.spec');
   }
 
-  @Action(RuleCreatorActions.Test)
-  test(ctx: StateContext<RuleCreatorStateModel>): ObservableInput<any> {
+  @Action(RuleCreatorActions.Lint)
+  lint(ctx: StateContext<RuleCreatorStateModel>): Observable<any> {
     const ruleForm = ctx.getState().ruleForm.model;
     if (!ruleForm) return of(null);
-    return this.ruleCreatorHttpService.runTest(ruleForm.rule, ruleForm.ruleTest).pipe(
+
+    return this.ruleCreatorHttpService.lint(ruleForm.rule, ruleForm.badExampleCode).pipe(
       mergeMap(result => {
+        const status = result.length > 0 ? LintResult.FAILED : LintResult.PASSED;
+
+        console.log(result);
+
         ctx.patchState({
-          testResult: { status: TestResult.PASSED, dateTime: new Date() }
+          lintResult: {
+            messages: (result as LintResultModel[]),
+            dateTime: new Date(),
+            status: status
+          }
         });
+
         return of(result);
-      }),
-      catchError(error => {
-        ctx.patchState({
-          testResult: { status: TestResult.FAILED, dateTime: new Date() }
-        });
-        return of(null);
       })
     );
   }

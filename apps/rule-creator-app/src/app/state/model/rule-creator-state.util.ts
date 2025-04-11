@@ -19,7 +19,8 @@ export namespace RuleCreatorStateUtil {
     const failureExample = createData.failureExample
       ? `This is an example of when the rule should actively throw an error:
     ${createData.failureExample}. Make sure the rule would detect such an error.`
-      : '';
+      : `I need you to write a bad example where the rule will throw an error, if I did not provide one.
+      Here is an example for bad code for the provided example-rule: ${PromptConfig.badExampleCode}.`;
     const framework =
       createData.framework === Framework.NONE
         ? ''
@@ -30,7 +31,7 @@ export namespace RuleCreatorStateUtil {
     )}.`;
     return `I want to write a custom lint rule with ESLint in JavaScript. The rule should be set up like this
     example: ${PromptConfig.example}. The rule should do the following: ${createData.description}. ${failureExample} The category is ${createData.category}
-    and the type is ${createData.type}. ${fixable} ${framework} ${ressources} I also need you to write a test for the created rule. Here is an example test: ${PromptConfig.exampleTest}.
+    and the type is ${createData.type}. ${fixable} ${framework} ${ressources}
     After creating the test make sure the test would run successfully. If not check on the rule and the test again according to requirements. Also make sure the
     rule is compatible with EsLint Version ${createData.esLintVersion}. It has to be compatible with any minor or patch of the stated major version.
     ${PromptConfig.responseFormat}. Here is a valid example: ${PromptConfig.responseFormatExample}. Do not give me anything but the JSON Object as string!`;

@@ -1,10 +1,12 @@
 import express from 'express';
 import * as path from 'path';
-import { exec } from 'child_process';
+import OpenAI from 'openai';
+import { ESLint } from 'eslint';
 import * as fs from 'fs';
 import * as os from 'os';
-import OpenAI from 'openai';
+import { NodeVM } from 'vm2';
 import { promisify } from 'util';
+import { exec } from 'child_process';
 
 const app = express();
 app.use(express.json());
@@ -35,7 +37,7 @@ app.post('/api/gpt', async (req, res) => {
   //   max_output_tokens: 1000,
   // });
 
-  const response = "```json\n{\n  \"rule\": \"import { Rule } from 'eslint';\\n\\nexport function useJestImports(context: Rule.RuleContext): Rule.RuleListener {\\n  return {\\n    ImportDeclaration(node) {\\n      const sourceValue = node.source.value;\\n      if (\\n        sourceValue === '@ngneat/spectator' &&\\n        !sourceValue.includes('jest')\\n      ) {\\n        context.report({\\n          node,\\n          message: `By default, Spectator uses Jasmine for creating spies. Please use import path @ngneat/spectator/jest in order to let Spectator create Jest-compatible spies.`,\\n          fix: function (fixer) {\\n            return fixer.replaceText(node.source, \\\"'@ngneat/spectator/jest'\\\");\\n          },\\n        });\\n      }\\n    },\\n  };\\n}\",\n  \"ruleTest\": \"import { RuleTester } from 'eslint';\\nimport { useJestImports } from './path-to-your-rule-file'; // Adjust the import path\\n\\nconst ruleTester = new RuleTester({\\n  parserOptions: {\\n    ecmaVersion: 2020,\\n    sourceType: 'module',\\n  },\\n});\\n\\nruleTester.run('useJestImports', useJestImports, {\\n  valid: [\\n    {\\n      code: \\\"import { createComponent } from '@ngneat/spectator/jest';\\\", // Valid import using jest\\n    },\\n    {\\n      code: \\\"import { createComponent } from '@ngneat/spectator/xyz';\\\", // Non-violating but not jest-specific\\n    },\\n  ],\\n\\n  invalid: [\\n    {\\n      code: \\\"import { createComponent } from '@ngneat/spectator';\\\",\\n      errors: [\\n        {\\n          message:\\n            \\\"By default, Spectator uses Jasmine for creating spies. Please use import path @ngneat/spectator/jest in order to let Spectator create Jest-compatible spies.\\\",\\n          type: 'ImportDeclaration',\\n        },\\n      ],\\n      output: \\\"import { createComponent } from '@ngneat/spectator/jest';\\\", // Expect this change as a fix\\n    },\\n  ],\\n});\"\n}\n```";
+  const response = "```json\n{\n  \"rule\": \"import { Rule } from 'eslint';\\n\\nexport function useJestImports(context: Rule.RuleContext): Rule.RuleListener {\\n  return {\\n    ImportDeclaration(node) {\\n      const sourceValue = node.source.value;\\n      if (\\n        sourceValue === '@ngneat/spectator' &&\\n        !sourceValue.includes('jest')\\n      ) {\\n        context.report({\\n          node,\\n          message: `By default, Spectator uses Jasmine for creating spies. Please use import path @ngneat/spectator/jest in order to let Spectator create Jest-compatible spies.`,\\n          fix: function (fixer) {\\n            return fixer.replaceText(node.source, \\\"'@ngneat/spectator/jest'\\\");\\n          },\\n        });\\n      }\\n    },\\n  };\\n}\",\n  \"badExampleCode\": \"import { createComponent } from '@ngneat/spectator';\"```";
   const cleanedResponse = response.replace(/```json|```/g, '').trim();
 
   try {
@@ -48,50 +50,92 @@ app.post('/api/gpt', async (req, res) => {
   // console.log(response.output_text)
 });
 
-const execPromise = promisify(exec);
-
+const execAsync = promisify(exec);
 // @ts-ignore
-app.post('/api/run-test', async (req, res) => {
-  const { codeToTest, testCode } = req.body;
-  if (!codeToTest || !testCode) {
-    return res.status(400).json({
-      success: false,
-      message: 'Both codeToTest and testCode must be provided.',
-    });
-  }
+app.post('/api/lint', async (req, res) => {
+  const { rule, badExampleCode } = req.body;
 
-  const codeFilePath = path.join(__dirname, 'user-code.ts');
-  const testFilePath = path.join(__dirname, 'user-test-code.spec.ts');
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lint-'));
+  const rulePath = path.join(tempDir, 'custom-rule.js');
+  const codePath = path.join(tempDir, 'code.js');
+  const pluginDir = path.join(tempDir, 'eslint-plugin-custom');
+  const pluginIndex = path.join(pluginDir, 'index.js');
+  const eslintConfigPath = path.join(tempDir, '.eslintrc.cjs');
 
   try {
-    fs.writeFileSync(codeFilePath, codeToTest);
-    fs.writeFileSync(testFilePath, testCode);
+    fs.writeFileSync(rulePath, rule);
+    fs.writeFileSync(codePath, badExampleCode);
+    fs.mkdirSync(pluginDir);
 
-    console.log(`User code written to: ${codeFilePath}`);
-    console.log(`Test code written to: ${testFilePath}`);
-    const result = await execPromise('npx jest --silent --coverage=false', {
-      cwd: __dirname,
-    });
+    // Plugin file that wraps the rule
+    fs.writeFileSync(pluginIndex, `
+      module.exports.rules = {
+        'user-rule': require('../custom-rule')
+      };
+    `);
 
-    console.log('Jest result stdout:', result.stdout);
-    console.log('Jest result stderr:', result.stderr);
-    res.json({ success: true, result: result.stdout });
-  } catch (error) {
-    console.error('Error running Jest:', error);
+    // ESLint config file
+    fs.writeFileSync(eslintConfigPath, `
+module.exports = [
+  {
+    files: ['**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'module',
+    },
+    plugins: {
+      custom: require('./eslint-plugin-custom'),
+    },
+    rules: {
+      'no-console': 'off',
+      'no-unused-vars': 'off',
+      'no-undef': 'off',
+      'custom/user-rule': 'error',
+    },
+  }
+];
+    `);
 
-    res.status(500).json({
-      success: false,
-      message: 'Error running tests',
-    });
-  } finally {
+    const eslintCmd = `npx eslint "${codePath}" -c "${eslintConfigPath}" -f json`;
+    console.log(`Running ESLint with: ${eslintCmd}`);
+
+    let stdout;
+
     try {
-      fs.unlinkSync(codeFilePath);
-      fs.unlinkSync(testFilePath);
-    } catch (err) {
-      console.error('Error cleaning up files:', err);
+      const result = await execAsync(eslintCmd, {
+        cwd: tempDir,
+        env: {
+          ...process.env,
+          NODE_PATH: tempDir,
+        },
+      });
+      stdout = result.stdout;
+    } catch (error: any) {
+      // ESLint returns code 1 when it finds linting errors — that's fine
+      if (error.stdout) {
+        stdout = error.stdout;
+      } else {
+        console.error('Error running ESLint:', error);
+        return res.status(500).json({ error: 'Could not run ESLint.' });
+      }
     }
+
+    try {
+      const lintResult = JSON.parse(stdout);
+      res.json(lintResult[0].messages); // return entire array if needed
+    } catch (parseErr) {
+      console.error('Failed to parse ESLint output:', parseErr);
+      res.status(500).json({ error: 'Failed to parse ESLint output.' });
+    }
+
+  } catch (err: any) {
+    console.error('Unexpected error:', err);
+    res.status(500).json({ error: 'Unexpected server error.', details: err.message });
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
   }
 });
+
 
 const port = process.env['PORT'] || 3333;
 const server = app.listen(port, () => {

@@ -1,12 +1,13 @@
 import { FormState, FormStateUtil } from './form-state.model';
+import { LintResultModel } from './lint-result.model';
 import { RuleCreatorForm } from './rule-creator-form.model';
 import { RuleForm } from './rule-form.model';
-import { TestResult } from './test-result.enum';
+import { LintResult } from './lint-result.enum';
 
 export interface RuleCreatorStateModel {
   creatorForm: FormState<RuleCreatorForm>;
   ruleForm: FormState<RuleForm>;
-  testResult: { status: TestResult; dateTime: Date; errorMessage?: string } | null;
+  lintResult: { messages: LintResultModel[]; dateTime: Date; status: LintResult } | null;
   apiKey: string | null;
 }
 
@@ -14,7 +15,7 @@ export function createDefault(): RuleCreatorStateModel {
   return {
     creatorForm: FormStateUtil.create(),
     ruleForm: FormStateUtil.create(),
-    testResult: null,
+    lintResult: null,
     apiKey: null,
   };
 }

@@ -1,4 +1,4 @@
-export enum TestResult {
+export enum LintResult {
   FAILED = 'Failed',
   PASSED = 'Passed',
 }

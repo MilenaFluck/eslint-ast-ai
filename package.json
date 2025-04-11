@@ -32,6 +32,7 @@
     "openai": "4.93.0",
     "rxjs": "7.8.0",
     "tslib": "2.3.0",
+    "vm2": "^3.9.19",
     "zone.js": "0.15.0"
   },
   "devDependencies": {
@@ -62,7 +63,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^18.16.9",
     "@typescript-eslint/eslint-plugin": "8.29.0",
-    "@typescript-eslint/parser": "8.29.0",
+    "@typescript-eslint/parser": "^8.29.0",
     "@typescript-eslint/utils": "7.16.0",
     "angular-eslint": "19.3.0",
     "eslint": "8.56.0",

@@ -52,6 +52,14 @@ mat-toolbar {
   margin-top: 50px;
 }
 
+.lint-message-container {
+  padding: 20px;
+  border: 1px solid #880000;
+  border-radius: 6px;
+  background-color: #FFCCBB;
+  margin-bottom: 10px;
+}
+
 .passed {
   color: #006666;
   margin-top: 15px;

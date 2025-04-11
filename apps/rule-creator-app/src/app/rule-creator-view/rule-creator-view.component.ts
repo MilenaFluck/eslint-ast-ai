@@ -3,15 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, model, OnInit, } from '@ang
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent, MatDialogModule,
-  MatDialogRef,
-  MatDialogTitle
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -63,9 +55,10 @@ export class RuleCreatorViewComponent implements OnInit {
 
   readonly ressources = select(RuleCreatorState.ressources);
   readonly ressourcesBuildTool = select(RuleCreatorState.ressourcesBuildTool);
-  readonly testResultStatus = select(RuleCreatorState.testResultStatus);
-  readonly testResultDateTime = select(RuleCreatorState.testResultDateTime);
-  readonly testPassed = select(RuleCreatorState.testPassed);
+  readonly lintResultStatus = select(RuleCreatorState.lintResultStatus);
+  readonly lintResultDateTime = select(RuleCreatorState.lintResultDateTime);
+  readonly lintPassed = select(RuleCreatorState.lintPassed);
+  readonly lintResultMessages = select(RuleCreatorState.lintResultMessages);
 
   readonly dialog = inject(MatDialog);
 
@@ -83,7 +76,7 @@ export class RuleCreatorViewComponent implements OnInit {
 
     this.ruleForm = new FormGroup({
       rule: new FormControl(null),
-      ruleTest: new FormControl(null),
+      badExampleCode: new FormControl(null),
     });
   }
 
@@ -95,16 +88,12 @@ export class RuleCreatorViewComponent implements OnInit {
     this.store.dispatch(new RuleCreatorActions.Export());
   }
 
-  testRule(): void {
-    this.store.dispatch(new RuleCreatorActions.Test());
-  }
-
-  copyTest(): void {
-    navigator.clipboard.writeText(this.ruleForm.get('rule')?.value);
+  lintRule(): void {
+    this.store.dispatch(new RuleCreatorActions.Lint());
   }
 
   copyRule(): void {
-    navigator.clipboard.writeText(this.ruleForm.get('ruleTest')?.value);
+    navigator.clipboard.writeText(this.ruleForm.get('rule')?.value);
   }
 
   removeApiKey(): void {
