@@ -1,0 +1,22 @@
+#services:
+#  frontend:
+#    image: angular-app
+#    build:
+#      context: .
+#      dockerfile: apps/rule-creator-app/Dockerfile
+#    ports:
+#      - "4200:80"  # Exposing the frontend on port 4200
+#    depends_on:
+#      - backend
+#    command: nx serve rule-creator-app --port=4200
+#
+#  backend:
+#    image: backend-app
+#    build:
+#      context: .
+#      dockerfile: apps/rule-creator-api/Dockerfile
+#    ports:
+#      - "3333:3333"  # Exposing the backend on port 3333
+#    environment:
+#      - NODE_ENV=production
+#    command: nx serve rule-creator-api --port=3333

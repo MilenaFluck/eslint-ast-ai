@@ -66,7 +66,7 @@ app.post('/api/lint', async (req, res) => {
     fs.writeFileSync(eslintConfigPath, `
         module.exports = [
           {
-            files: ['**/*.js', '**/*.html'],
+            files: ['**/*.js'],
             languageOptions: {
               ecmaVersion: 2020,
               sourceType: 'module',

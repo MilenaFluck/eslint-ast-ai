@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UpdateFormValue } from '@ngxs/form-plugin';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
+import { createForm } from 'openai/uploads';
 import { mergeMap, Observable, ObservableInput, of } from 'rxjs';
 import {
   BuildTool,
@@ -65,7 +66,7 @@ export class RuleCreatorState {
   create(ctx: StateContext<RuleCreatorStateModel>): ObservableInput<any> {
     const state = ctx.getState();
     const createData = state.creatorForm.model;
-
+console.log(state.apiKey, createData);
     if (createData) {
       const prompt = RuleCreatorStateUtil.createPrompt(createData);
 

@@ -29,8 +29,11 @@ export namespace RuleCreatorStateUtil {
     const ressources = `The following documentation might be helpful: ${frameworkToRessourcesMap.get(
       createData.framework
     )}.`;
+    const fileTypes = createData.fileTypes.length > 0 ? `Make sure the rule only applies to files with extensions ${createData.fileTypes.join(', .')}.` : ''
     return `I want to write a custom lint rule with ESLint in JavaScript. The rule should be set up like this
-    example for Es Modules: ${PromptConfig.exampleEsModules} and this ${PromptConfig.exampleCommonJs} fpr CommonJs. I need both versions of the rule. Create the ES Module version first and then convert to Common JS version of the rule. The rule should do the following: ${createData.description}. ${failureExample} The category is ${createData.category}
+    example for Es Modules: ${PromptConfig.exampleEsModules} and this ${PromptConfig.exampleCommonJs} fpr CommonJs. I need both versions of the rule.
+    Create the ES Module version first and then convert to Common JS version of the rule. The rule should do the following: ${createData.description}. ${failureExample}
+    ${fileTypes}. The category is ${createData.category}
     and the type is ${createData.type}. ${fixable} ${framework} ${ressources}
     After creating the test make sure the test would run successfully. If not check on the rule and the test again according to requirements. Also make sure the
     rule is compatible with EsLint Version ${createData.esLintVersion}. It has to be compatible with any minor or patch of the stated major version.

@@ -145,6 +145,28 @@
           </mat-select>
         </mat-form-field>
       </div>
+      <div class="row">
+        <mat-form-field>
+          <mat-label>Filetype</mat-label>
+          <mat-select formControlName="fileTypes" multiple>
+            <mat-option
+              *ngFor="
+                let type of [
+                  fileType.JS,
+                  fileType.TS,
+                  fileType.JSX,
+                  fileType.TSX,
+                  fileType.HTML,
+                ]
+              "
+              [value]="type"
+            >
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </div>
     </form>
     <button mat-flat-button class="float-right" (click)="create()">
       Create Rule
