@@ -45,7 +45,12 @@ const execAsync = promisify(exec);
 app.post('/api/lint', async (req, res) => {
   const { rule, badExampleCode } = req.body;
 
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lint-'));
+  const nxRoot = path.resolve(__dirname, '../../'); // Adjust if needed
+  const tempBaseDir = path.join(nxRoot, 'tmp', 'lint-workspace');
+
+  fs.mkdirSync(tempBaseDir, { recursive: true });
+
+  const tempDir = fs.mkdtempSync(path.join(tempBaseDir, 'lint-'));
   const rulePath = path.join(tempDir, 'custom-rule.js');
   const codePath = path.join(tempDir, 'code.js');
   const pluginDir = path.join(tempDir, 'eslint-plugin-custom');
@@ -118,9 +123,10 @@ app.post('/api/lint', async (req, res) => {
   } catch (err: any) {
     console.error('Unexpected error:', err);
     return res.status(500).json({ error: 'Unexpected server error.', details: err.message });
-  } finally {
-    fs.rmSync(tempDir, { recursive: true, force: true });
   }
+  // finally {
+  //   fs.rmSync(tempDir, { recursive: true, force: true });
+  // }
 });
 
 
