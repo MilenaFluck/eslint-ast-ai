@@ -1,0 +1,34 @@
+services:
+  frontend:
+    image: angular-app
+    build:
+      context: .
+      dockerfile: apps/rule-creator-web/Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    command: nx serve rule-creator-web --host 0.0.0.0
+    volumes:
+      - ./apps/rule-creator-web:/app/rule-creator-web  # Mount the local directory to the container
+    networks:
+      - app-network
+
+  backend:
+    image: backend-app
+    build:
+      context: .
+      dockerfile: apps/rule-creator-api/Dockerfile
+    ports:
+      - "3333:3333"
+    environment:
+      - NODE_ENV=production
+    command: /bin/sh -c "nx build rule-creator-api --configuration=production && ls -alh /app/dist/apps/rule-creator-api && nx serve rule-creator-api --host 0.0.0.0"
+    volumes:
+      - ./apps/rule-creator-api:/app/rule-creator-api
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

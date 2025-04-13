@@ -66,7 +66,6 @@ export class RuleCreatorState {
   create(ctx: StateContext<RuleCreatorStateModel>): ObservableInput<any> {
     const state = ctx.getState();
     const createData = state.creatorForm.model;
-console.log(state.apiKey, createData);
     if (createData) {
       const prompt = RuleCreatorStateUtil.createPrompt(createData);
 

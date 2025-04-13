@@ -1,20 +1,20 @@
 export default {
-  displayName: 'rule-creator-app',
-  coverageDirectory: '../../coverage/apps/rule-creator-app',
+  displayName: 'rule-creator-web',
+  coverageDirectory: '../../coverage/apps/rule-creator-web',
   preset: '../../jest.preset-angular.js',
   reporters: [
     'default',
     [
       'jest-sonar',
       {
-        outputDirectory: './reports/apps/rule-creator-app',
+        outputDirectory: './reports/apps/rule-creator-web',
         outputName: 'sonar-report.xml',
       },
     ],
     [
       'jest-junit',
       {
-        outputDirectory: './reports/apps/rule-creator-app',
+        outputDirectory: './reports/apps/rule-creator-web',
         outputName: 'junit-report.xml',
         suiteName: 'Rule Creator Web Tests',
       },

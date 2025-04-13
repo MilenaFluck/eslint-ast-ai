@@ -8,7 +8,7 @@
       "{workspaceRoot}/eslint.config.js",
       "{workspaceRoot}/tools/eslint-rules/**/*"
     ],
-    "cache": true
+    "cache": false
   },
   "namedInputs": {
     "sharedGlobals": [],
@@ -38,10 +38,9 @@
         "{workspaceRoot}/eslint.config.cjs",
         "{workspaceRoot}/tools/eslint-rules/**/*"
       ],
-      "cache": true
+      "cache": false
     }
   },
-  "nxCloudId": "67f405d2f044cf2f0112ed5a",
   "plugins": [
     {
       "plugin": "@nx/webpack/plugin",
@@ -64,7 +63,6 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/rule-creator-api-e2e/**/*"]
     }
   ]
 }

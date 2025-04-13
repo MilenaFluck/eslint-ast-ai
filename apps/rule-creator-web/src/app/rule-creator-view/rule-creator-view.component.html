@@ -112,35 +112,35 @@
       </div>
       <div class="row">
         <mat-form-field>
-          <mat-label>Type</mat-label>
+          <mat-label>Tools</mat-label>
           <mat-select formControlName="buildTool">
             <mat-option
               *ngFor="
-                let type of [
+                let tool of [
                   buildTool.NONE,
                   buildTool.NX,
                   buildTool.TURBOREPO
                 ]
               "
-              [value]="type"
+              [value]="tool"
             >
-              {{ type }}
+              {{ tool }}
             </mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
-          <mat-label>Type</mat-label>
+          <mat-label>ESLint Version</mat-label>
           <mat-select formControlName="esLintVersion">
             <mat-option
               *ngFor="
-                let type of [
+                let version of [
                   esLintVersion.V_8,
                   esLintVersion.V_9,
                 ]
               "
-              [value]="type"
+              [value]="version"
             >
-              {{ type }}
+              {{ version }}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -177,9 +177,9 @@
         your project: <a [href]="ressources()" target="_blank">{{ ressources() }}</a></span
       >
     </div>
-    <div class="ressources-container row" *ngIf="ressourcesBuildTool()">
+    <div class="ressources-container build-tool row" *ngIf="ressourcesBuildTool()">
       <span
-      >Here you find more information on how to set up EsLint with your build tool: <a [href]="ressourcesBuildTool()" target="_blank">{{ ressourcesBuildTool() }}</a></span
+      >Here you find more information on how to set up ESLint with your build tool: <a [href]="ressourcesBuildTool()" target="_blank">{{ ressourcesBuildTool() }}</a></span
       >
     </div>
   </div>
@@ -239,3 +239,8 @@
     </form>
   </div>
 </app-split-view>
+<footer class="sticky-footer">
+  <div class="row">
+    <span>By DillyBeeze UG | Image from <a href="https://pixabay.com/" target="_blank">pixabay.com</a></span>
+  </div>
+</footer>

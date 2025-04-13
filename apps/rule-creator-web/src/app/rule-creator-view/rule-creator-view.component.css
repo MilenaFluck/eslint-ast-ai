@@ -50,6 +50,12 @@ mat-toolbar {
   border-radius: 6px;
   background-color: #dafae7;
   margin-top: 50px;
+
+  &.build-tool {
+    margin-top: 20px;
+    border-color: #61a6f9;
+    background-color: #aed1fc;
+  }
 }
 
 .lint-message-container {
@@ -74,4 +80,16 @@ mat-toolbar {
 
 .hidden {
   display: none;
+}
+
+.sticky-footer {
+  background-color: black;
+  color: #dafae7;
+  padding: 18px;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  div {
+    justify-content: center;
+  }
 }
