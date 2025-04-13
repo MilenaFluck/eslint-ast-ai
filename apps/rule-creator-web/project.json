@@ -2,9 +2,9 @@
   "name": "rule-creator-web",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "generators": {},
   "sourceRoot": "apps/rule-creator-web/src",
   "prefix": "app",
+  "generators": {},
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
@@ -76,6 +76,10 @@
           "apps/rule-creator-web/**/*.html"
         ]
       }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/rule-creator-web/Dockerfile . -t rule-creator-web"
     }
   }
 }
