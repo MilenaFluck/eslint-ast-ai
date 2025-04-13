@@ -163,7 +163,10 @@
       </div>
     </form>
     <button mat-flat-button class="float-right" (click)="create()">
-      Create Rule
+      <div class="row">
+        <mat-spinner *ngIf="creatingRule()" diameter="20"></mat-spinner>
+        <span>Create Rule</span>
+      </div>
     </button>
     <div class="ressources-container row">
       <span
@@ -218,7 +221,12 @@
                 ((lintResultDateTime() ?? '') | date : 'shortTime')
             }}
           </span>
-          <button mat-flat-button (click)="lintRule()">Lint Code</button>
+          <button mat-flat-button (click)="lintRule()">
+            <div class="row">
+              <mat-spinner *ngIf="linting()" diameter="20"></mat-spinner>
+              <span>Lint Code</span>
+            </div>
+          </button>
         </div>
       </div>
       <div *ngFor="let message of lintResultMessages()">

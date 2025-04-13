@@ -8,9 +8,11 @@ import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dial
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { javascript } from '@codemirror/lang-javascript';
+import { hasActionsExecuting } from '@ngxs-labs/actions-executing';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { select, Store } from '@ngxs/store';
 import { basicSetup } from 'codemirror';
@@ -42,6 +44,7 @@ import { RuleCreatorActions } from '../state/rule-creator.actions';
     MatToolbarModule,
     CodemirrorEditorComponent,
     MatButtonToggleModule,
+    MatProgressSpinnerModule
   ],
 })
 export class RuleCreatorViewComponent implements OnInit {
@@ -66,6 +69,8 @@ export class RuleCreatorViewComponent implements OnInit {
   readonly lintResultDateTime = select(RuleCreatorState.lintResultDateTime);
   readonly lintPassed = select(RuleCreatorState.lintPassed);
   readonly lintResultMessages = select(RuleCreatorState.lintResultMessages);
+  readonly linting = select(hasActionsExecuting([RuleCreatorActions.Lint]));
+  readonly creatingRule = select(hasActionsExecuting([RuleCreatorActions.Create]));
 
   readonly dialog = inject(MatDialog);
 

@@ -4,6 +4,7 @@ import {
   importProvidersFrom,
   provideZoneChangeDetection,
 } from '@angular/core';
+import { NgxsActionsExecutingModule } from '@ngxs-labs/actions-executing';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsFormPluginModule } from '@ngxs/form-plugin';
 import { NgxsModule } from '@ngxs/store';
@@ -22,6 +23,7 @@ export const appConfig: ApplicationConfig = {
         disabled: false,
       })
     ),
+    importProvidersFrom(NgxsActionsExecutingModule.forRoot()),
     importProvidersFrom(NgxsFormPluginModule.forRoot()),
     provideHttpClient(),
   ],

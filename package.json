@@ -23,6 +23,7 @@
     "@angular/router": "19.2.0",
     "@codemirror/lang-javascript": "6.2.3",
     "@ngneat/spectator": "19.4.1",
+    "@ngxs-labs/actions-executing": "^19.0.0",
     "@ngxs/devtools-plugin": "19.0.0",
     "@ngxs/form-plugin": "19.0.0",
     "@ngxs/store": "19.0.0",

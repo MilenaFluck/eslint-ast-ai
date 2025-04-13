@@ -1,0 +1,22 @@
+services:
+  web:
+    build:
+      context: ./tools/docker/web
+    ports:
+      - "80:80"
+    depends_on:
+      - node
+    networks:
+      - app-network
+
+  node:
+    build:
+      context: ./tools/docker/node
+    ports:
+      - "3333:3333"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
