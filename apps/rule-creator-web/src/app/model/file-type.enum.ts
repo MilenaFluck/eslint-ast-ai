@@ -3,5 +3,6 @@ export enum FileType {
   TS = 'ts',
   JSX = 'jsx',
   TSX = 'tsx',
+  VUE = 'vue',
   HTML = 'html'
 }

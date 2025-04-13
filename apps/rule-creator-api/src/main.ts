@@ -2,7 +2,6 @@ import { exec } from 'child_process';
 import express from 'express';
 import * as fs from 'fs';
 import OpenAI from 'openai';
-import * as os from 'os';
 import * as path from 'path';
 import { promisify } from 'util';
 
@@ -108,14 +107,6 @@ module.exports = [
       'no-reserved-keys': 'off',
       'custom/user-rule': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@angular-eslint/component-selector': ['error', {
-        type: 'element',
-        prefix: 'app',
-      }],
-      '@angular-eslint/directive-selector': ['error', {
-        type: 'attribute',
-        prefix: 'app',
-      }],
     },
   },
 ];
@@ -156,9 +147,9 @@ module.exports = [
     console.error('Unexpected error:', err);
     return res.status(500).json({ error: 'Unexpected server error.', details: err.message });
   }
-  finally {
-    fs.rmSync(tempDir, { recursive: true, force: true });
-  }
+  // finally {
+  //   fs.rmSync(tempDir, { recursive: true, force: true });
+  // }
 });
 
 
