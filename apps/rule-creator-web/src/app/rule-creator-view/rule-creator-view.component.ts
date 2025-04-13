@@ -71,6 +71,7 @@ export class RuleCreatorViewComponent implements OnInit {
   readonly lintResultMessages = select(RuleCreatorState.lintResultMessages);
   readonly linting = select(hasActionsExecuting([RuleCreatorActions.Lint]));
   readonly creatingRule = select(hasActionsExecuting([RuleCreatorActions.Create]));
+  readonly fixing = select(hasActionsExecuting([RuleCreatorActions.ApplyFix]));
 
   readonly dialog = inject(MatDialog);
 
@@ -103,8 +104,12 @@ export class RuleCreatorViewComponent implements OnInit {
     this.store.dispatch(new RuleCreatorActions.Export(this.selectedModuleSystem));
   }
 
-  lintRule(): void {
+  lint(): void {
     this.store.dispatch(new RuleCreatorActions.Lint());
+  }
+
+  applyFix(): void {
+    this.store.dispatch(new RuleCreatorActions.ApplyFix());
   }
 
   copyRule(): void {

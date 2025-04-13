@@ -147,9 +147,122 @@ module.exports = [
     console.error('Unexpected error:', err);
     return res.status(500).json({ error: 'Unexpected server error.', details: err.message });
   }
-  // finally {
-  //   fs.rmSync(tempDir, { recursive: true, force: true });
-  // }
+  finally {
+    fs.rmSync(tempBaseDir, { recursive: true, force: true });
+  }
+});
+
+
+const execAsync2 = promisify(exec);
+app.post('/api/apply-fix', async (req, res) => {
+  const { rule, badExampleCode, badExampleCodeFileType } = req.body;
+
+  const nxRoot = path.resolve(__dirname, '../../'); // Adjust if needed
+  const tempBaseDir = path.join(nxRoot, 'tmp', 'lint-workspace');
+
+  fs.mkdirSync(tempBaseDir, { recursive: true });
+
+  const tempDir = fs.mkdtempSync(path.join(tempBaseDir, 'lint-'));
+  const rulePath = path.join(tempDir, 'custom-rule.js');
+  const codePath = path.join(tempDir, `code.${badExampleCodeFileType}`);
+  const pluginDir = path.join(tempDir, 'eslint-plugin-custom');
+  const pluginIndex = path.join(pluginDir, 'index.js');
+  const eslintConfigPath = path.join(tempDir, '.eslintrc.cjs');
+
+  try {
+    fs.writeFileSync(rulePath, rule);
+    fs.writeFileSync(codePath, badExampleCode);
+    fs.mkdirSync(pluginDir);
+
+    fs.writeFileSync(pluginIndex, `
+      module.exports.rules = {
+        'user-rule': require('../custom-rule')
+      };
+    `);
+
+    fs.writeFileSync(eslintConfigPath, `
+module.exports = [
+  {
+    files: ['**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'module',
+    },
+    plugins: {
+      custom: require('./eslint-plugin-custom'),
+    },
+    rules: {
+      'no-console': 'off',
+      'no-unused-vars': 'off',
+      'no-undef': 'off',
+      'no-reserved-keys': 'off',
+      'custom/user-rule': 'error',
+    },
+  },
+  {
+    files: ['**/*.ts'],
+    languageOptions: {
+      parser: require('@typescript-eslint/parser'),
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'module',
+      },
+    },
+    plugins: {
+      custom: require('./eslint-plugin-custom'),
+      '@angular-eslint': require('@angular-eslint/eslint-plugin'),
+      '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
+    },
+    rules: {
+      'no-console': 'off',
+      'no-unused-vars': 'off',
+      'no-undef': 'off',
+      'no-reserved-keys': 'off',
+      'custom/user-rule': 'error',
+      '@typescript-eslint/no-explicit-any': 'warn',
+    },
+  },
+];
+    `);
+
+    const eslintCmd = `npx eslint "${codePath}" -c "${eslintConfigPath}" -f json --fix`;
+    console.log(`Running ESLint with: ${eslintCmd}`);
+
+    let stdout;
+
+    try {
+      const result = await execAsync(eslintCmd, {
+        cwd: tempDir,
+        env: {
+          ...process.env,
+          NODE_PATH: tempDir,
+        },
+      });
+      stdout = result.stdout;
+    } catch (error: any) {
+      if (error.stdout) {
+        stdout = error.stdout;
+      } else {
+        console.error('Error running ESLint:', error);
+        return res.status(500).json({ error: 'Could not run ESLint.' });
+      }
+    }
+
+    try {
+      const lintResult = JSON.parse(stdout);
+      return res.json(lintResult[0].output);
+    } catch (parseErr) {
+      console.error('Failed to parse ESLint output:', parseErr);
+      return res.status(500).json({ error: 'Failed to parse ESLint output.' });
+    }
+
+  } catch (err: any) {
+    console.error('Unexpected error:', err);
+    return res.status(500).json({ error: 'Unexpected server error.', details: err.message });
+  }
+  finally {
+    fs.rmSync(tempBaseDir, { recursive: true, force: true });
+  }
 });
 
 

@@ -15,6 +15,10 @@ export namespace RuleCreatorActions {
     static readonly type = '[Rule] Lint';
   }
 
+  export class ApplyFix {
+    static readonly type = '[Rule] Apply Fix';
+  }
+
   export class RemoveKey {
     static readonly type = '[API Key] Remove';
   }

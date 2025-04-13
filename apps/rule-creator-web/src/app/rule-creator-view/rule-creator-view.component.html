@@ -221,10 +221,16 @@
                 ((lintResultDateTime() ?? '') | date : 'shortTime')
             }}
           </span>
-          <button mat-flat-button (click)="lintRule()">
+          <button mat-flat-button (click)="lint()">
             <div class="row">
               <mat-spinner *ngIf="linting()" diameter="20"></mat-spinner>
               <span>Lint Code</span>
+            </div>
+          </button>
+          <button mat-flat-button (click)="applyFix()">
+            <div class="row">
+              <mat-spinner *ngIf="fixing()" diameter="20"></mat-spinner>
+              <span>Apply Auto Fix</span>
             </div>
           </button>
         </div>

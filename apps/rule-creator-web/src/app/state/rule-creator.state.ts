@@ -129,6 +129,22 @@ export class RuleCreatorState {
     );
   }
 
+  @Action(RuleCreatorActions.ApplyFix)
+  applyFix(ctx: StateContext<RuleCreatorStateModel>): Observable<any> {
+    const ruleForm = ctx.getState().ruleForm.model;
+    if (!ruleForm) return of(null);
+    const ruleCommonJs = ruleForm.ruleCommonJs.replace(/^.*?(module\.exports)/s, '$1')
+    return this.ruleCreatorHttpService.applyFix(ruleCommonJs, ruleForm.badExampleCode, ruleForm.fileType).pipe(
+      mergeMap(result => {
+        ctx.dispatch(new UpdateFormValue({
+          value: { ruleEsModules: ruleForm.ruleEsModules, ruleCommonJs: ruleForm.ruleCommonJs, badExampleCode: result, fileType: ruleForm.fileType },
+          path: 'rule_creator.ruleForm'
+        }));
+        return of(result);
+      })
+    );
+  }
+
 
   @Action(RuleCreatorActions.RemoveKey)
   removeKey(ctx: StateContext<RuleCreatorStateModel>): void {

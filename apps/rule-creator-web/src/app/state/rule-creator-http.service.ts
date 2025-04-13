@@ -17,4 +17,8 @@ export class RuleCreatorHttpService {
   lint(rule: string, badExampleCode: string, badExampleCodeFileType: FileType): Observable<LintResultModel[]> {
     return this.http.post<LintResultModel[]>(`${this.apiUrl}/lint`, { rule, badExampleCode, badExampleCodeFileType }).pipe();
   }
+
+  applyFix(rule: string, badExampleCode: string, badExampleCodeFileType: FileType): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/apply-fix`, { rule, badExampleCode, badExampleCodeFileType }).pipe();
+  }
 }
