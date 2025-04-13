@@ -43,7 +43,7 @@ app.post('/api/gpt', async (req, res) => {
 
 const execAsync = promisify(exec);
 app.post('/api/lint', async (req, res) => {
-  const { rule, badExampleCode } = req.body;
+  const { rule, badExampleCode, badExampleCodeFileType } = req.body;
 
   const nxRoot = path.resolve(__dirname, '../../'); // Adjust if needed
   const tempBaseDir = path.join(nxRoot, 'tmp', 'lint-workspace');
@@ -52,7 +52,7 @@ app.post('/api/lint', async (req, res) => {
 
   const tempDir = fs.mkdtempSync(path.join(tempBaseDir, 'lint-'));
   const rulePath = path.join(tempDir, 'custom-rule.js');
-  const codePath = path.join(tempDir, 'code.js');
+  const codePath = path.join(tempDir, `code.${badExampleCodeFileType}`);
   const pluginDir = path.join(tempDir, 'eslint-plugin-custom');
   const pluginIndex = path.join(pluginDir, 'index.js');
   const eslintConfigPath = path.join(tempDir, '.eslintrc.cjs');
@@ -69,24 +69,56 @@ app.post('/api/lint', async (req, res) => {
     `);
 
     fs.writeFileSync(eslintConfigPath, `
-        module.exports = [
-          {
-            files: ['**/*.js'],
-            languageOptions: {
-              ecmaVersion: 2020,
-              sourceType: 'module',
-            },
-            plugins: {
-              custom: require('./eslint-plugin-custom'),
-            },
-            rules: {
-              'no-console': 'off',
-              'no-unused-vars': 'off',
-              'no-undef': 'off',
-              'custom/user-rule': 'error',
-            },
-          }
-        ];
+module.exports = [
+  {
+    files: ['**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'module',
+    },
+    plugins: {
+      custom: require('./eslint-plugin-custom'),
+    },
+    rules: {
+      'no-console': 'off',
+      'no-unused-vars': 'off',
+      'no-undef': 'off',
+      'no-reserved-keys': 'off',
+      'custom/user-rule': 'error',
+    },
+  },
+  {
+    files: ['**/*.ts'],
+    languageOptions: {
+      parser: require('@typescript-eslint/parser'),
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'module',
+      },
+    },
+    plugins: {
+      custom: require('./eslint-plugin-custom'),
+      '@angular-eslint': require('@angular-eslint/eslint-plugin'),
+      '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
+    },
+    rules: {
+      'no-console': 'off',
+      'no-unused-vars': 'off',
+      'no-undef': 'off',
+      'no-reserved-keys': 'off',
+      'custom/user-rule': 'error',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@angular-eslint/component-selector': ['error', {
+        type: 'element',
+        prefix: 'app',
+      }],
+      '@angular-eslint/directive-selector': ['error', {
+        type: 'attribute',
+        prefix: 'app',
+      }],
+    },
+  },
+];
     `);
 
     const eslintCmd = `npx eslint "${codePath}" -c "${eslintConfigPath}" -f json`;
@@ -124,9 +156,9 @@ app.post('/api/lint', async (req, res) => {
     console.error('Unexpected error:', err);
     return res.status(500).json({ error: 'Unexpected server error.', details: err.message });
   }
-  // finally {
-  //   fs.rmSync(tempDir, { recursive: true, force: true });
-  // }
+  finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
 });
 
 

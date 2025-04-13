@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UpdateFormValue } from '@ngxs/form-plugin';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
-import { createForm } from 'openai/uploads';
 import { mergeMap, Observable, ObservableInput, of } from 'rxjs';
 import {
   BuildTool,
@@ -85,8 +84,9 @@ export class RuleCreatorState {
             const ruleEsModules = promptResult.ruleEsModules;
             const ruleCommonJs = promptResult.ruleCommonJs;
             const badExampleCode = promptResult.badExampleCode;
+            const fileType = state.creatorForm.model?.fileTypes[0];
             ctx.dispatch(new UpdateFormValue({
-              value: { ruleEsModules, ruleCommonJs, badExampleCode },
+              value: { ruleEsModules, ruleCommonJs, badExampleCode, fileType },
               path: 'rule_creator.ruleForm'
             }));
 
@@ -112,7 +112,7 @@ export class RuleCreatorState {
     if (!ruleForm) return of(null);
 
     const ruleCommonJs = ruleForm.ruleCommonJs.replace(/^.*?(module\.exports)/s, '$1')
-    return this.ruleCreatorHttpService.lint(ruleCommonJs, ruleForm.badExampleCode).pipe(
+    return this.ruleCreatorHttpService.lint(ruleCommonJs, ruleForm.badExampleCode, ruleForm.fileType).pipe(
       mergeMap(result => {
         const status = result.length > 0 ? LintResult.FAILED : LintResult.PASSED;
 

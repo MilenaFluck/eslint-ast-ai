@@ -86,6 +86,7 @@ export class RuleCreatorViewComponent implements OnInit {
       ruleEsModules: new FormControl(null),
       ruleCommonJs: new FormControl(null),
       badExampleCode: new FormControl(null),
+      fileType: new FormControl(null),
     });
   }
 
