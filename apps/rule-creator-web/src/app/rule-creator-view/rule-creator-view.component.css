@@ -93,3 +93,11 @@ mat-toolbar {
     justify-content: center;
   }
 }
+
+.image-link {
+  color: white;
+
+  &:hover {
+    color: #dafae7;
+  }
+}
