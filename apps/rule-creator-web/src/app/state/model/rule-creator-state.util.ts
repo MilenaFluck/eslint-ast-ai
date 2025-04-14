@@ -15,7 +15,7 @@ export namespace RuleCreatorStateUtil {
   export function createPrompt(createData: RuleCreatorForm): string {
     const fixable = createData.fixable
       ? "Set a fixable: 'code', and add a fix option in the context.report."
-      : '';
+      : 'Do not provide a fix within the rule!';
     const failureExample = createData.failureExample
       ? `This is an example of when the rule should actively throw an error:
     ${createData.failureExample}. Make sure the rule would detect such an error.`
